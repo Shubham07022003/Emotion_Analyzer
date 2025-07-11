@@ -6,8 +6,8 @@ import torch
 app = Flask(__name__)
 CORS(app)
 
-# Load the emotion analysis pipeline
-emotion_model = pipeline("sentiment-analysis", model="j-hartmann/emotion-english-distilroberta-base", top_k=1)
+# Load the emotion analysis pipeline 
+emotion_model = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english", top_k=1)
 
 @app.route('/')
 def home():
