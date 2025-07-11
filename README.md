@@ -26,12 +26,12 @@ A simple full-stack application that analyzes the emotion behind your written re
 - PyTorch
 - flask-cors
 
----
-
-## 📂 Folder Structure
 
 
----
+
+
+
+
 
 ## ⚙️ Prerequisites
 
