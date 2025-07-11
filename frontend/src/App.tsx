@@ -1,12 +1,17 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import './App.css';
-
+// const BACKEND_URL = process.env.BACKEND_URL ;
+if (!process.env.REACT_APP_BACKEND_URL) {
+  throw new Error('REACT_APP_BACKEND_URL is not defined');
+}
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 interface EmotionResult {
   emotion: string;
   confidence: number;
 }
 
 const App: React.FC = () => {
+
   const [reflection, setReflection] = useState<string>('');
   const [result, setResult] = useState<EmotionResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,7 +23,7 @@ const App: React.FC = () => {
     setError(null);
     setResult(null);
     try {
-      const response = await fetch('http://localhost:5000/analyze', {
+      const response = await fetch(BACKEND_URL as string, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
