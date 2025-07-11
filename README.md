@@ -92,7 +92,7 @@ pip install -r requirements.txt
 ```
 ### 4.Start the Flask server:
 ```bash
-python app.py
+flask run
 ```
 ### 5.This will start the backend at:
 
