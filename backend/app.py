@@ -1,17 +1,26 @@
+import os
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from transformers import pipeline
-import torch
+from huggingface_hub import InferenceClient
+from dotenv import load_dotenv
+load_dotenv()  # Loads variables from .env
+
+HF_TOKEN = os.environ.get("HF_TOKEN")
+
+print("HF_TOKEN:", HF_TOKEN)
+
 
 app = Flask(__name__)
 CORS(app)
 
-# Load the emotion analysis pipeline 
-emotion_model = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english", top_k=1)
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+# Initialize the client with model and token
+client = InferenceClient(
+    model="j-hartmann/emotion-english-distilroberta-base",
+    token=HF_TOKEN
+)
+
+
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -21,11 +30,14 @@ def analyze():
         return jsonify({'error': 'No text provided'}), 400
 
     try:
-        result = emotion_model(text)[0][0]
-        emotion = result['label']
-        confidence = round(result['score'], 2)
-        return jsonify({'emotion': emotion, 'confidence': confidence})
+        results = client.text_classification(text)
+        result = results[0]
+        return jsonify({
+            'emotion': result['label'],
+            'confidence': round(result['score'], 2)
+        })
     except Exception as e:
+        print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
